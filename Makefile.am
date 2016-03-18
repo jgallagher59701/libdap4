@@ -25,8 +25,8 @@ if BUILD_DEVELOPER
 AM_CXXFLAGS += $(CXXFLAGS_DEBUG)
 endif
 
-SUBDIRS = gl d4_ce d4_function .  tests unit-tests
-DIST_SUBDIRS = gl d4_ce d4_function tests unit-tests
+SUBDIRS = gl d4_ce d4_function . python tests unit-tests
+DIST_SUBDIRS = gl d4_ce d4_function python tests unit-tests
 
 noinst_LTLIBRARIES = libparsers.la
 

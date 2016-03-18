@@ -122,6 +122,20 @@ AS_VERSION_COMPARE(["$bison_version"], ["3.0"],
 
 AC_MSG_RESULT([found vesion $bison_version])
 
+dnl *** Python extension
+
+AM_PATH_PYTHON(2.3)
+
+dnl The Automake manual says the following will work after
+dnl PATH_PYTHON is called.
+dnl AM_CONDITIONAL([HAVE_PYTHON], [test "$PYTHON" != :])
+
+AX_PKG_SWIG(3.0.0, [], [ AC_MSG_ERROR([SWIG is required to build.]) ])
+AX_SWIG_ENABLE_CXX
+AX_SWIG_PYTHON
+
+dnl *** End python extension
+
 dnl Checks for header files.
 AC_HEADER_DIRENT
 AC_HEADER_STDC
@@ -361,6 +375,8 @@ AC_CONFIG_FILES([Makefile
                  d4_ce/Makefile
                  d4_function/Makefile
                  
+		 python/Makefile
+
                  tests/Makefile
                  tests/atlocal
                  
