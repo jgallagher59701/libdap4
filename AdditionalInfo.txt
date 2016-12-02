@@ -1,0 +1,7 @@
+.h.in-Files
+config.h.in
+dods-datatypes-config.h.in
+unit-tests/test_config.h.in
+xdr-datatypes-config.h.in
+
+.in.in-Files
