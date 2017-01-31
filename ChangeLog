@@ -1,3 +1,351 @@
+2016-12-08  James Gallagher  <jgallagher@opendap.org>
+
+	Merge pull request #25 from OPENDAP/chunked_istream_bug
+	Fixed a memory issue in chunked_istream.h
+
+	Fixed a memory issue in chunked_istream.h (new[] mis-matched with delete)
+
+2016-11-18  James Gallagher  <jgallagher@opendap.org>
+
+	Merge pull request #24 from OPENDAP/dmr++
+	Dmr++
+
+	Merge pull request #23 from OPENDAP/D4Group_ptr_duplicate_fix
+	Fix fir D4Group::ptr_duplicate(). It was not returning BaseType*
+
+2016-11-17  James Gallagher  <jgallagher@opendap.org>
+
+	Fix fir D4Group::ptr_duplicate(). It was not returning BaseType*
+	Instead, it returned D4Group. There may have been a good reason,
+	But I think consistency is better. ...maybe
+
+2016-11-16  ndp-opendap  <ndp@opendap.org>
+
+	DMR parser will now ignore and XML not in the DAP4 namespace. woot.
+
+2016-11-15  ndp-opendap  <ndp@opendap.org>
+
+	XML namespace thing sorted. DMR parser will now ignore all
+	elements that are not in DAP4 namespace. woot.
+
+	Still working the namespace thing
+
+2016-11-15  James Gallagher  <jgallagher@opendap.org>
+
+	Merge branch 'master' of https://github.com/opendap/libdap4.git
+
+2016-11-15  ndp-opendap  <ndp@opendap.org>
+
+	Trying to get name space centralization class working. ugh. Static methods
+
+2016-11-15  James Gallagher  <jgallagher@opendap.org>
+
+	Added comment for dmr_start_element()
+
+2016-11-04  James Gallagher  <jgallagher@opendap.org>
+
+	Corrected the file: URL in HTTPConnectTest - I think ...
+
+	Merge branch 'master' of http://github.com/opendap/libdap4
+
+	Another try at fixing the travis build
+
+	Trial fix of test_config.h error on Travis.
+
+	Stopped running the tests using multiple jobs on Travis.
+	This might have been the cause of failures there.
+
+2016-11-03  James Gallagher  <jgallagher@opendap.org>
+
+	Merge branch 'master' of http://github.com/opendap/libdap4
+
+2016-11-02  James Gallagher  <jgallagher@opendap.org>
+
+	Updated the library version info for version 3.18.2
+
+	Version 3.18.2
+
+2016-11-01  James Gallagher  <jgallagher@opendap.org>
+
+	Formatting Grid.cc
+
+2016-10-20  James Gallagher  <jgallagher@opendap.org>
+
+	Fixed Hyrax-267
+	The DAP4 ce parser was not removing double quotes or the %<hex>
+	escaping, so names that needed those were not 'found' in the
+	dataset. Also, the grammar used by the parser had a syntax error
+	in it where /s in the id name were turned into dots and the
+	resulting names could not be found. The result was a valid names
+	were being rejected.
+
+2016-10-12  James Gallagher  <jgallagher@opendap.org>
+
+	Corrected a comment in Vector.h
+
+2016-08-30  James Gallagher  <jgallagher@opendap.org>
+
+	Merge pull request #22 from sharkcz/getopt
+	type fix for getopt
+
+2016-08-30  Dan Horák  <dan@danny.cz>
+
+	type fix for getopt
+
+	The getopt() function uses int as return type and using char for a
+	variable storing the return value makes problem on platform where
+	char is unsgined by default.
+	http://www.arm.linux.org.uk/docs/faqs/signedchar.php
+
+	Fix by Orion Poplawski <orion[at]cora.nwra.com> for
+	https://bugzilla.redhat.com/show_bug.cgi?id=1366787
+
+2016-08-26  James Gallagher  <jgallagher@opendap.org>
+
+	Merge pull request #21 from sharkcz/dmr-bigendian-2
+	add missing big endian baselines
+
+2016-08-26  Dan Horák  <dan@danny.cz>
+
+	add missing big endian baselines
+
+2016-08-22  James Gallagher  <jgallagher@opendap.org>
+
+	Added main_page.doxygen to gitignore
+
+2016-07-14  James Gallagher  <jgallagher@opendap.org>
+
+	Merge branch 'master' of https://github.com/opendap/libdap4
+
+	Added libuuid to the requirements listed in INSTALL.
+	Also added a comment and fixed error message text in util.cc for
+	void extract_double_array(Array *a, vector<double> &dest)
+
+2016-06-09  James Gallagher  <jgallagher@opendap.org>
+
+	Fixed a compiler warning when USE_POSIX_THREADS is not def'd in XDRStreamMarshaller
+
+2016-06-08  James Gallagher  <jgallagher@opendap.org>
+
+	Removed generagted file since it's causing grief on Travis
+
+	Updates for the source dist and unit-tests
+
+2016-05-31  James Gallagher  <jgallagher@opendap.org>
+
+	Version 3.18.0
+2016-05-25  James Gallagher  <jgallagher@opendap.org>
+
+	Fixed ugly DBG2() macro calls
+
+2016-05-18  James Gallagher  <jgallagher@opendap.org>
+
+	Merge remote-tracking branch 'origin/Hyrax-98'
+	Conflicts:
+		D4Connect.cc
+		d4_ce/D4ConstraintEvaluator.cc
+		d4_ce/d4_ce_parser.yy
+
+2016-05-17  James Gallagher  <jgallagher@opendap.org>
+
+	Merge pull request #19 from OPENDAP/response_cache
+	Response cache
+
+2016-05-16  James Gallagher  <jgallagher@opendap.org>
+
+	Added recursive Sequence::reset_row_number() and comments
+
+2016-05-15  James Gallagher  <jgallagher@opendap.org>
+
+	Minor edits after testing specializing read_row() for the ResponseCache
+	See bes/dap CachedSequence and CacheTypeFactory for more info.
+
+2016-05-13  James Gallagher  <jgallagher@opendap.org>
+
+	Checkpoint - Nathan's hack for Sequence plus debugging
+
+	Added comments for the hacked set_send_p() and set_read_p() methods
+
+2016-05-12  James Gallagher  <jgallagher@opendap.org>
+
+	Added a (potential) fix for Vector::set_send_p()
+
+	Hacks for the bes branch 'response_cache'
+
+2016-05-10  James Gallagher  <jgallagher@opendap.org>
+
+	Changes for Coverity
+	[ci skip]
+
+	Comments
+
+2016-05-09  James Gallagher  <jgallagher@opendap.org>
+
+	Coverity edits - both minor
+	[ci skip]
+
+	Removed extraneous include
+
+2016-05-06  James Gallagher  <jgallagher@opendap.org>
+
+	Added parser-util.cc back in after deleting it by mistake.
+
+2016-05-05  James Gallagher  <jgallagher@opendap.org>
+
+	Minor patches for issues found by Coverity Changes to be
+	committed: modified: Connect.cc deleted: parser-util.cc
+
+	Improved error checking for the DDX parser.
+	When text is feed into the parser and its not valid xml, the parser
+	was just ignoring that. No more...
+
+	Arrg. baselines were not in the last commit...
+
+	Moved the newest tests' baselines to the 'universal' directory
+	It's time to switch the new DMR tests to ones that don't have to
+	have a separate set of baselines for bin- and little-endian
+	machines. It takes too long to build up the big-endian test
+	baselines (get a b-e VM, etc.) and we have a good set of baselines
+	for each arch so if issues pop up on one or the otehr arch,
+	it should be easy to catch them.
+
+	Merge pull request #18 from OPENDAP/jg_filters
+	Jg filters
+
+	Merge branch 'master' into jg_filters
+	Conflicts: D4Sequence.h
+
+	Added 'universal' tests for DMRTest
+	The DMR includes a checksum when it's built from received data and
+	that checksum is a function of word order of the sender. This made
+	building baselines for the DMR tests a pain. We've built a number of
+	tests for both big- and little-endian machines - from now on new
+	tests should use 'universal' baselines (built by removing the checksum
+	using sed).
+
+2016-05-03  James Gallagher  <jgallagher@opendap.org>
+
+	Merge pull request #17 from OPENDAP/D4Sequence_value_ref
+	Added a new method to D4Sequence
+
+	Cosmetic editing
+
+	Optimized the read_sequence_values() code.
+	Child sequences do not have copies of the filter clauses. These are not
+	needed by them since they have already been filtered.
+
+	Added tests for complex CEs involving nested seqeunces
+
+	Inner sequence filter issue resolved
+	The code still needs tests and there is a potential optimization and
+	the syntax needs to be documented because the way fields in a
+	sequence can be referenced is less general than other places in the CE.
+
+	Fixed the issue with child sequences in DAP4
+
+2016-05-02  James Gallagher  <jgallagher@opendap.org>
+
+	Partial fix for Hyrax-182
+	https://opendap.atlassian.net/browse/HYRAX-182
+
+2016-04-29  James Gallagher  <jgallagher@opendap.org>
+
+	More test baselines
+
+	Scanner fix
+
+	Fixed the numeric constant error with the filter code
+	Numeric constants were showing up as the value '1.' The checking_*()
+	functions were the culprit. In the process I added missing methods in
+	the FilterClause code and debugging in a number of places.
+
+	Added tests for the new filter code. Not all of the tests pass...
+	There is some work to be done with parsing the != and ~= operators
+	and also mixing int and float arguments. There may be issues with
+	filed references as well, but we'll have to check the spec for that.
+
+2016-04-25  James Gallagher  <jgallagher@opendap.org>
+
+	Fixed the issue with <constant> <op> <var> not working.
+
+2016-04-24  James Gallagher  <jgallagher@opendap.org>
+
+	Fixed three operand filter clauses in the CE evaluator, but...
+	they still don't work correctly. There seems to be a problem with the
+	parsing of constants.
+
+	Removed debugging statements; Using the 'ND' operator is an error.
+
+	The parser now builds filter clauses and binds them to a D4Sequence.
+	Some by-hand tests show not everything works, but mostly it's a problem
+	with relops and String variables or constants.
+
+2016-04-23  James Gallagher  <jgallagher@opendap.org>
+
+	Parser tweaks - relops now are returned as strings
+
+	Fixed a problem with the TestByte, ..., classes when used for 'series values'
+	Some of the classes had the odd behavior that the series of values
+	was per-process and not per object instance. So, TestStr's value
+	would not repeat until a new process was started, it instead kept
+	increasing "... 1", "... 2", etc., across different instances of
+	the class. Fixing this made it easy to fix the TestD4Sequence code.
+
+2016-04-22  James Gallagher  <jgallagher@opendap.org>
+
+	Added tests for D4Sequences, including filter clause evaluation
+
+	Added D4SequenceTest
+
+	D4Sequence now supports evaluating a FilterClauseList.
+	Added tests too. I have only tested D4Sequence::intern_data(),
+	not serialize().
+
+	D4FilterClauseList now used by D4Sequence::serialize()
+
+	Eh, I rewrote the relops operator code.
+	It now uses the same approach that I used for DAP2 - a method
+	for each type (Byte, ...).
+
+	Added D4FilterClauseTest
+
+2016-04-21  James Gallagher  <jgallagher@opendap.org>
+
+	Fixed a bug in the was D4Function was used
+	In the ServerFunctionList and d4_function_parser.yy, I should
+	have been using a poiter to D4Function and not the object itself.
+	Now the DMRTests for functions pass
+
+	Hacks to the D4FilterClause code
+	This also includes fixes to D4RValue and tests for the filter clause
+	code. Two minor changes to the parsers.
+
+2016-04-20  James Gallagher  <jgallagher@opendap.org>
+
+	Merge branch 'master' into jg_filters
+
+	Added a new method to D4Sequence
+	D4SeqValues &D4Sequence::value_ref(): Returns a reference to the
+	internal data held by a D4Sequence instance.
+
+2016-04-20  Nathan Potter  <ndp@opendap.org>
+
+	Updated doxygen version number
+
+	Merge branch 'master' of https://github.com/opendap/libdap4
+
+	Added debugging statements to various Sequence items.
+
+2016-04-18  James Gallagher  <jgallagher@opendap.org>
+
+	Merge branch 'master' of https://github.com/opendap/libdap4
+
+	Version 3.17.3
+
+	Version 3.17.2; Fixed a soname error
+	Adding a const constructor seems to have *removed* the old constructor
+	as far as some code is concerned (it's still there, but with a
+	different mangled name).
 2016-04-15  James Gallagher  <jgallagher@opendap.org>
 
 	Merge pull request #15 from sharkcz/cppunit

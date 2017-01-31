@@ -105,7 +105,7 @@ class HTTPConnectTest: public TestFixture {
         // to see the values it's returning.
         // On 10/13/14 we moved to a new httpd and the etag value changed.
         // jhrg 10/14/14
-        etag = "\"2a008e-157-3fbcd139c2680\""; //\"a10df-157-139c2680\""; // a10df-157-139c2680a
+        etag = "\"181893-157-3fbcd139c2680\""; //"\"2a008e-157-3fbcd139c2680\""; //\"a10df-157-139c2680\""; // a10df-157-139c2680a
         lm = "Wed, 13 Jul 2005 19:32:26 GMT";
 
         localhost_pw_url =
@@ -432,7 +432,7 @@ class HTTPConnectTest: public TestFixture {
         HTTPResponse *stuff = 0;
         char c;
         try {
-	    string url = (string)"file://test_config.h" ;
+	    string url = (string)"file://" + TEST_SRC_DIR + "/test_config.h" ;
             stuff = http->fetch_url(url);
             CPPUNIT_ASSERT(fread(&c, 1, 1, stuff->get_stream()) == 1
                            && !ferror(stuff->get_stream())
@@ -467,7 +467,7 @@ class HTTPConnectTest: public TestFixture {
         HTTPResponse *stuff = 0;
         char c;
         try {
-	    string url = (string)"file://test_config.h" ;
+	    string url = (string)"file://" + TEST_SRC_DIR + "/test_config.h" ;
             stuff = http->fetch_url(url);
 
             stuff->get_cpp_stream()->read(&c, 1);

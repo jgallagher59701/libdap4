@@ -43,13 +43,14 @@
 #include "D4Attributes.h"
 #include "D4Maps.h"
 #include "D4Enum.h"
-
 #include "D4BaseTypeFactory.h"
 
+#include "DapXmlNamespaces.h"
 #include "D4ParserSax2.h"
 
 #include "util.h"
 #include "debug.h"
+
 
 namespace libdap {
 
@@ -80,6 +81,8 @@ static const char *states[] = {
         "inside_map",
 
         "inside_constructor",
+
+        "not_dap4_element",
 
         "parser_unknown",
         "parser_error",
@@ -330,7 +333,13 @@ bool D4ParserSax2::process_map(const char *name, const xmlChar **attrs, int nb_a
 	else					// get enclosing Group and lookup Map there
 		map_source = top_group()->find_map_source(map_name);
 
-	if (!map_source)
+	// Change: If the parser is in 'strict' mode (the default) and the Array named by
+	// the Map cannot be fond, it is an error. If 'strict' mode is false (permissive
+	// mode), then this is not an error. However, the Array referenced by the Map will
+	// be null. This is a change in the parser's behavior to accommodate requests for
+	// Arrays that include Maps that do not also include the Map(s) in the request.
+	// See https://opendap.atlassian.net/browse/HYRAX-98. jhrg 4/13/16
+	if (!map_source && d_strict)
 		throw Error("The Map '" + map_name + "' was not found while parsing the variable '" + a->name() + "'.");
 
 	a->maps()->add_map(new D4Map(map_name, map_source));
@@ -618,6 +627,19 @@ void D4ParserSax2::dmr_end_document(void * p)
     parser->pop_attributes();
 }
 
+/**
+ * Callback run when libxml2 reads the start of an element
+ *
+ * @param p Pointer to the parser object
+ * @param l Localname of the element
+ * @param prefix Namespace prefix of the element
+ * @param URI the Element namespace name if available
+ * @param nb_namespaces Number of namespace definitions on that node
+ * @param namespaces Pointer to the array of prefix/URI pairs namespace definitions
+ * @param nb_attributes The number of attributes on that node
+ * @param nb_defaulted The number of defaulted attributes. The defaulted ones are at the end of the array
+ * @param attributes Pointer to the array of (localname/prefix/URI/value/end) attribute values.
+ */
 void D4ParserSax2::dmr_start_element(void *p, const xmlChar *l, const xmlChar *prefix, const xmlChar *URI,
         int nb_namespaces, const xmlChar **namespaces, int nb_attributes, int /*nb_defaulted*/,
         const xmlChar **attributes)
@@ -625,7 +647,23 @@ void D4ParserSax2::dmr_start_element(void *p, const xmlChar *l, const xmlChar *p
     D4ParserSax2 *parser = static_cast<D4ParserSax2*>(p);
     const char *localname = (const char *) l;
 
-    if (parser->debug()) cerr << "Start element " << localname << " (state " << states[parser->get_state()] << ")" << endl;
+    if (parser->debug()) cerr << "Start element " << localname << "  prefix:  "<< (prefix?(char *)prefix:"null") << "  ns: "<< (URI?(char *)URI:"null")
+    		   << " (state: " << states[parser->get_state()] << ")" << endl;
+
+    if(parser->get_state() != parser_error){
+        string dap4_ns_name = DapXmlNamspaces::getDapNamespaceString(DAP_4_0);
+        if (parser->debug()) cerr << "dap4_ns_name:         " << dap4_ns_name << endl;
+
+        string this_element_ns_name((char *)URI);
+        if (parser->debug()) cerr << "this_element_ns_name: " << this_element_ns_name << endl;
+
+        if(this_element_ns_name.compare(dap4_ns_name)){
+            if (parser->debug()) cerr << "Start of non DAP4 element: " << localname << " detected." << endl;
+        	parser->push_state(not_dap4_element);
+        	// return;
+        }
+    }
+
 
     switch (parser->get_state()) {
         case parser_start:
@@ -798,6 +836,10 @@ void D4ParserSax2::dmr_start_element(void *p, const xmlChar *l, const xmlChar *p
             else
                 D4ParserSax2::dmr_error(parser, "Expected an Attribute, Dim, Map or variable element; found '%s' instead.", localname);
             break;
+
+        case not_dap4_element:
+            if (parser->debug()) cerr << "Inside non DAP4 element. localname: " << localname << endl;
+        	break;
 
         case parser_unknown:
             // FIXME?
@@ -1046,6 +1088,11 @@ void D4ParserSax2::dmr_end_element(void *p, const xmlChar *l, const xmlChar *pre
         parser->pop_state();
         break;
     }
+
+    case not_dap4_element:
+        if (parser->debug()) cerr << "End of non DAP4 element: " << localname << endl;
+        parser->pop_state();
+    	break;
 
     case parser_unknown:
         parser->pop_state();

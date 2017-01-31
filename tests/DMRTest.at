@@ -236,11 +236,15 @@ DMR_PARSE([dmr-testsuite/test_array_8.xml], [pass])
 DMR_PARSE([dmr-testsuite/test_array_10.xml], [pass])
 DMR_PARSE([dmr-testsuite/test_array_11.xml], [pass])
 
+DMR_PARSE([dmr-testsuite/ignore_foreign_xml_1.xml], [pass])
+DMR_PARSE([dmr-testsuite/ignore_foreign_xml_2.xml], [pass])
+DMR_PARSE([dmr-testsuite/ignore_foreign_xml_3.xml], [pass])
+
 # Transmit: Test building and then decoding the response
 # These calls don't include the 'dmr-testsuite' directory because the tests
 # need to choose baselines based on the word order. We could probably re-
 # organize these so that the dir names where here - which I prefer, but
-# the new 'baselines' option makes it far eaier to build the baselines, and
+# the new 'baselines' option makes it far easier to build the baselines, and
 # that was the primary reason for keeping the directory names here and explicit;
 # it made it much easier to sort out what input to use when building a baseline.
 
@@ -324,6 +328,22 @@ DMR_INTERN([test_array_14.xml], [pass])
 
 DMR_INTERN([test_simple_6.2.xml], [pass])
 DMR_INTERN([test_simple_6.3.xml], [pass])
+
+# These tests only work for little-endian machines at this time. If baselines for
+# big-endian machines are built, this AS_IF can be removed.
+
+# Added these tests as part of https://opendap.atlassian.net/browse/HYRAX-98.
+# jhrg 4/13/16
+ 
+AS_IF([test "$WORD_ORDER" = "little-endian"],
+[
+DMR_TRANS_CE([test_array_3.1.dmr], [row;x], [test_array_3.1.dmr.1.trans_base], [pass])
+DMR_TRANS_CE([test_array_3.1.dmr], [row=[[2:3]];x], [test_array_3.1.dmr.2.trans_base], [pass])
+DMR_TRANS_CE([test_array_3.1.dmr], [row=[[2:3]];x[[0:1]]], [test_array_3.1.dmr.3.trans_base], [pass])
+DMR_TRANS_CE([test_array_3.1.dmr], [x[[0:1]]], [test_array_3.1.dmr.4.trans_base], [pass])
+DMR_TRANS_CE([test_array_3.1.dmr], [x], [test_array_3.1.dmr.5.trans_base], [pass])
+],
+[])
 
 # Test various facets of the CE parser and evaluation engine
 
@@ -539,3 +559,18 @@ DMR_TRANS_SERIES_CE([test_simple_8.1.xml], [outer{x;y;inner}], [test_simple_8.1.
 DMR_TRANS_SERIES_CE([test_simple_8.1.xml], [outer{x;y;inner|i1<1000}], [test_simple_8.1.xml.f4.trans_base], [pass])
 DMR_TRANS_SERIES_CE([test_simple_8.1.xml], [outer{x;y;inner|i1<1000}|x<0.0], [test_simple_8.1.xml.f5.trans_base], [pass])
 
+# These tests are regression tests for bug Hyrax-267. Spaces in variables names
+# broke the DAP4 CE parser
+
+# These mostly fail because thee's a second bug where the variables in a group are 
+# not printing values. 
+DMR_TRANS_SERIES_CE([names_with_spaces.dmr], [/u], [names_with_spaces.dmr.1.trans_base], [pass])
+DMR_TRANS_SERIES_CE([names_with_spaces.dmr], [/inst2/u], [names_with_spaces.dmr.2.trans_base], [xfail])
+DMR_TRANS_SERIES_CE([names_with_spaces.dmr], [/inst2/Point.x], [names_with_spaces.dmr.3.trans_base], [xfail])
+
+DMR_TRANS_SERIES_CE([names_with_spaces2.dmr], [/inst2/\"Point Break\".x], [names_with_spaces2.dmr.1.trans_base], [xfail])
+DMR_TRANS_SERIES_CE([names_with_spaces2.dmr], [/inst2/Point%20Break.x], [names_with_spaces2.dmr.1.trans_base], [xfail])
+DMR_TRANS_SERIES_CE([names_with_spaces2.dmr], [/inst2/\"Point%20Break\".x], [names_with_spaces2.dmr.1.trans_base], [xfail])
+
+DMR_TRANS_SERIES_CE([names_with_spaces3.dmr], [/inst2/\"New Group\"/x], [names_with_spaces3.dmr.1.trans_base], [xfail])
+DMR_TRANS_SERIES_CE([names_with_spaces3.dmr], [/inst2/New%20Group/x], [names_with_spaces3.dmr.1.trans_base], [xfail])
