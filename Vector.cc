@@ -354,7 +354,32 @@ int Vector::element_count(bool leaves)
  @brief Indicates that the data is ready to send. */
 void Vector::set_send_p(bool state)
 {
-    d_proto->set_send_p(state);
+    if (d_proto) {
+        d_proto->set_send_p(state);
+
+        // because some code may depend on the BaseType*s held in d_compound_buf
+        // behaving as if they are 'ordinary' DAP variables, make sure their send_p
+        // flag is set if they exist. Because space in the vector is allocated
+        // before values (BaseType*s) are added, check for nulls and limit the
+        // iteration to only those elements actually in the object including any
+        // constraints that may have been applied - these are values not declarations.
+        // jhrg 5/13/16
+        switch (d_proto->type()) {
+        case dods_structure_c:
+        case dods_sequence_c:
+        case dods_grid_c:
+            if (d_compound_buf.size() > 0) {
+                for (unsigned long long i = 0; i < (unsigned) d_length; ++i) {
+                    if (d_compound_buf[i]) d_compound_buf[i]->set_send_p(state);
+                }
+            }
+            break;
+
+        default:
+            break;
+        }
+    }
+
     BaseType::set_send_p(state);
 }
 
@@ -368,7 +393,24 @@ void Vector::set_read_p(bool state)
 {
     if (d_proto) {
         d_proto->set_read_p(state);
+
+        // See comment above.
+        switch (d_proto->type()) {
+        case dods_structure_c:
+        case dods_sequence_c:
+        case dods_grid_c:
+            if (d_compound_buf.size() > 0) {
+                for (unsigned long long i = 0; i < (unsigned)d_length; ++i) {
+                    if (d_compound_buf[i]) d_compound_buf[i]->set_read_p(state);
+                }
+            }
+            break;
+
+        default:
+            break;
+        }
     }
+
     BaseType::set_read_p(state);
 }
 

@@ -1,7 +1,12 @@
-Updated for version 3.17.2
+Updated for version 3.18.3
 
-Bug fixes and improved error messages; see NEWS and ChangeLog for 
-details.
+Bug fixes; See the ChangeLog and NEWS files.
+
+Updated for version 3.18.2
+
+Added support for DAP4 filter operations.
+
+For other information, see NEWS and ChangeLog
 
 Updated for 3.16.0
 

@@ -108,6 +108,8 @@ test_dap4_parser(const string &name, bool debug, bool print)
         cout << xml.get_doc() << endl;
     }
 
+    delete factory;
+    dataset->set_factory(0);
     return dataset;
 }
 
@@ -236,6 +238,11 @@ read_data_plain(const string &file_name, bool debug)
         cis.read(chunk, chunk_size);
         // parse char * with given size
     	D4ParserSax2 parser;
+
+    	// Mirror the behavior in D4Connect where we are permissive with DAP4
+    	// data responses' parsing, as per Hyrax-98 in Jira. jhrg 4/13/16
+    	parser.set_strict(false);
+
     	// '-2' to discard the CRLF pair
         parser.intern(chunk, chunk_size-2, dmr, debug);
     }
@@ -262,6 +269,8 @@ read_data_plain(const string &file_name, bool debug)
 
     dmr->root()->deserialize(um, *dmr);
 
+    delete factory;
+    dmr->set_factory(0);
     return dmr;
 }
 
